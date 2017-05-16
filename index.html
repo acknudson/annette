@@ -3,35 +3,66 @@
   <style>
     .scroll-down{
       position: absolute;
-      top: 1000px;
+      top: 0px;
     }
     .scroll-up{
       position: absolute;
       top: 500px;
       left: 300px;
     }
+    .stay-still {
+      position: absolute;
+      top: 1500px;
+    }
   </style>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script> window.resizeTo(800, 1500);  </script>
 
   <script>
-    $(window).scroll(function() {
-      var scrollTop = $(window).scrollTop();
-      var pos = $(".scroll-up").position();
-      if (scrollTop < 500) {
-        $('.scroll-up').css('top', pos.top - $(window).scrollTop() + 'px');
-      } else {
-        $('.scroll-up').css('top', pos.top + $(window).scrollTop() + 'px');
+
+    // from this stack overflow: http://stackoverflow.com/questions/7154967/how-to-detect-scroll-direction/33334461#33334461
+    $(window).on('wheel', function(e) {
+
+      var delta = e.originalEvent.deltaY;
+      var upPos = $(".scroll-up").position();
+      var downPos = $('.scroll-down').position();
+      if (delta > 0) { // scrolling down
+        if (upPos.top - $(window).scrollTop() > -500) {
+          $('.scroll-up').css('top', upPos.top - ($(window).scrollTop()/5) + 'px');
+        }
+        console.log(downPos.top + $(window).scrollTop());
+        if (downPos.top + $(window).scrollTop() < 1000){
+          $('.scroll-down').css('top', downPos.top + ($(window).scrollTop()/2) + 'px');
+        }
+      } else { // scrolling up
+        if (upPos.top + $(window).scrollTop() < 500) {
+          $('.scroll-up').css('top', upPos.top + ($(window).scrollTop()/5) + 'px');
+        }
+        if (downPos.top - $(window).scrollTop() > -500){
+          $('.scroll-down').css('top', downPos.top - ($(window).scrollTop()/2) + 'px');
+        }
       }
-      console.log('window scroll: ', $(window).scrollTop());
-      console.log($('.scroll-up').css('top'));
     });
+
+    // $(window).scroll(function() {
+    //   var scrollTop = $(window).scrollTop();
+    //   var pos = $(".scroll-up").position();
+    //   if (scrollTop < 500) {
+    //     $('.scroll-up').css('top', pos.top - $(window).scrollTop() + 'px');
+    //   } else {
+    //     $('.scroll-up').css('top', pos.top + $(window).scrollTop() + 'px');
+    //   }
+    //   console.log('window scroll: ', $(window).scrollTop());
+    //   console.log($('.scroll-up').css('top'));
+    // });
   </script>
 
   <body>
     <div class="page">
       <img class="scroll-down" src="http://carstenknoch.com/wp-content/uploads/2012/12/iTunes10-icon-small.png">
       <img class="scroll-up" src="http://developer.sgsolutionsllc.com/belsnj/wp-content/uploads/2014/05/guides-small-150x150.png">
+      <img class="stay-still" src="http://developer.sgsolutionsllc.com/belsnj/wp-content/uploads/2014/05/guides-small-150x150.png">
     </div>
   </body>
 </html>
